@@ -16,19 +16,11 @@ lx has three element types (as of now) that can be composed together:
 - **Text** — a text or icon label.
 - **Image** — a textured image.
 
-```odin
-Element :: union { ^Box, ^Text, ^Image }
-```
-
----
 
 ### Boxes
 
 Create a box with `lx.box`:
 
-```odin
-lx.box(label, w, h, direction, size_mode, hidden, parent, style)
-```
 
 **Size modes:**
 
@@ -41,7 +33,6 @@ lx.box(label, w, h, direction, size_mode, hidden, parent, style)
 - `.Row` — left to right
 - `.Col` — top to bottom
 
----
 
 ### Building a layout
 
@@ -62,8 +53,6 @@ Then run layout to compute positions and bounds:
 lx.layout(root, { 0, 0, f32(screen_w), f32(screen_h) }, ctx)
 ```
 
----
-
 ### Scrollable Areas
 
 Use `lx.scroll_area` to create a box whose children can scroll:
@@ -79,7 +68,6 @@ for i in 0..<50 {
 
 For horizontal scrolling pass `direction = .Row` and use `.Mixed` sizing on children with a fixed width.
 
----
 
 ### Rendering
 
@@ -97,8 +85,6 @@ lx.render(root, ctx, proc(element: ^lx.Element, ctx: ^lx.Context) {
     }
 })
 ```
-
----
 
 ### Input
 
@@ -132,8 +118,6 @@ Print the element tree for any box:
 ```odin
 fmt.println(lx.get_heirarchy(root))
 ```
-
----
 
 ## Examples
 
