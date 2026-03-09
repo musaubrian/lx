@@ -540,21 +540,18 @@ write_element :: proc(element: ^Element, depth := 0) -> string {
     switch el in element {
     case ^Box:
         string_el = fmt.aprintfln(
-            "%*s Box(label=%s, direction=%v, width=%f, height=%f, size_mode=%v)",
-            depth * 2, "",
-            el.debug_label, el.direction, el.w, el.h, el.size_mode,
+            "%*sBox(id=%d, label=%s, direction=%v, width=%f, height=%f, size_mode=%v)",
+            depth * 2, "", el.id, el.debug_label, el.direction, el.w, el.h, el.size_mode,
         )
     case ^Text:
         string_el = fmt.aprintfln(
-            "%*s Text(size=%f, color=%v, pos=%v, hidden=%v, content=\"%s\")",
-            depth * 2, "",
-            el.size, el.color, el.pos, el.hidden, el.content,
+            "%*sText(size=%f, color=%v, pos=%v, hidden=%v, content=\"%s\")",
+            depth * 2, "", el.size, el.color, el.pos, el.hidden, el.content,
         )
     case ^Image:
         string_el = fmt.aprintfln(
-            "%*s Image(label=%s pos=%v, bounds=%v)",
-            depth * 2, "",
-            el.debug_label, el.pos, el.bounds,
+            "%*sImage(label=%s pos=%v, bounds=%v)",
+            depth * 2, "", el.debug_label, el.pos, el.bounds,
         )
 
     }
