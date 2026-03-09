@@ -55,7 +55,9 @@ Style :: struct {
     hover_bg : Color,
     justify  : Alignment,
     align    : Alignment,
-    wrap     : bool,
+    wrap        : bool,
+    track_color : Color,
+    thumb_color : Color,
 }
 
 Font :: struct {
@@ -64,12 +66,12 @@ Font :: struct {
 }
 
 Context :: struct {
-    font          : Font,
-    scroll_offset : ^f32,
-    measure_text  : proc(t: ^Text, ctx: ^Context) -> Vec2,
-    begin_scissor : proc(rect: Rect),
-    end_scissor   : proc(),
-    state         : State,
+    font           : Font,
+    measure_text   : proc(t: ^Text, ctx: ^Context) -> Vec2,
+    begin_scissor  : proc(rect: Rect),
+    end_scissor    : proc(),
+    state          : State,
+    scroll_offsets : map[u32]f32,
 }
 
 Rect  :: struct { x, y, w, h: f32 }
@@ -430,7 +432,7 @@ _handle_input :: proc(b: ^Box, ctx: ^Context) {
         if ctx.state.scroll_wheel != 0 { b.scroll.offset -= ctx.state.scroll_wheel }
 
         b.scroll.offset = clamp(b.scroll.offset, 0, max_scroll)
-        if ctx.scroll_offset != nil { ctx.scroll_offset^ = b.scroll.offset }
+        ctx.scroll_offsets[b.id] = b.scroll.offset
     }
 
     for &element in b.elements {
@@ -475,6 +477,9 @@ render :: proc(b: ^Box, ctx: ^Context, draw_fn: proc(element: ^Element, ctx: ^Co
             thumb_ratio  := visible / content
             track_length := visible
 
+            tc := b.style.track_color if b.style.track_color != {} else _Track_Color
+            thc := b.style.thumb_color if b.style.thumb_color != {} else _Thumb_Color
+
             track: Box
             thumb: Box
 
@@ -486,8 +491,8 @@ render :: proc(b: ^Box, ctx: ^Context, draw_fn: proc(element: ^Element, ctx: ^Co
                 thumb_w := max(thumb_ratio * track_length, 20)
                 thumb_x := track_start + (b.scroll.offset / max_scroll) * (track_length - thumb_w)
 
-                track   = { bounds = { track_start, sy, track_length, _Scrollbar_Size }, style = { bg = _Track_Color } }
-                thumb   = { bounds = { thumb_x, sy, thumb_w, _Scrollbar_Size }, style = { bg = _Thumb_Color, round = _Scrollthumb_Round } }
+                track   = { bounds = { track_start, sy, track_length, _Scrollbar_Size }, style = { bg = tc } }
+                thumb   = { bounds = { thumb_x, sy, thumb_w, _Scrollbar_Size }, style = { bg = thc, round = _Scrollthumb_Round } }
             } else {
                 sx := b.bounds.x + b.bounds.w - _Scrollbar_Size
                 sy := b.bounds.y
@@ -496,8 +501,8 @@ render :: proc(b: ^Box, ctx: ^Context, draw_fn: proc(element: ^Element, ctx: ^Co
                 thumb_h := max(thumb_ratio * track_length, 20)
                 thumb_y := track_start + (b.scroll.offset / max_scroll) * (track_length - thumb_h)
 
-                track    = { bounds = { sx, track_start, _Scrollbar_Size, track_length }, style = { bg = _Track_Color } }
-                thumb    = { bounds = { sx, thumb_y,     _Scrollbar_Size, thumb_h },      style = { bg = _Thumb_Color, round =_Scrollthumb_Round } }
+                track    = { bounds = { sx, track_start, _Scrollbar_Size, track_length }, style = { bg = tc } }
+                thumb    = { bounds = { sx, thumb_y,     _Scrollbar_Size, thumb_h },      style = { bg = thc, round =_Scrollthumb_Round } }
             }
 
             track_el := Element(&track)
