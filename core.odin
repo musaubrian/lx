@@ -48,16 +48,17 @@ Image :: struct {
 }
 
 Style :: struct {
-    padding  : int,
-    gap      : int,
-    round    : f32,
-    bg       : Color,
-    hover_bg : Color,
-    justify  : Alignment,
-    align    : Alignment,
-    wrap        : bool,
-    track_color : Color,
-    thumb_color : Color,
+    padding        : int,
+    gap            : int,
+    round          : f32,
+    bg             : Color,
+    hover_bg       : Color,
+    justify        : Alignment,
+    align          : Alignment,
+    wrap           : bool,
+    track_color    : Color,
+    thumb_color    : Color,
+    progress_color : Color,
 }
 
 Font :: struct {
