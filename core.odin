@@ -85,7 +85,13 @@ _Scrollthumb_Round : f32 : 10.0
 _Track_Color       :: Color{ 30,  30,  30,  255 }
 _Thumb_Color       :: Color{ 140, 140, 140, 255 }
 
-make_id :: proc(label: string) -> u32 { return hash.fnv32a(transmute([]u8)label) }
+make_id :: proc(label: string, parent: ^Box = nil) -> u32 {
+    seed : u32 = 2166136261
+    if parent != nil {
+        seed = parent.id ~ u32(len(parent.elements))
+    }
+    return hash.fnv32a(transmute([]u8)label, seed)
+}
 
 box :: proc(label: string, w, h : f32, direction: Direction = .Row, size_mode: Size_Mode = .Relative,
             hidden := false, parent : ^Box = nil, style := Style{}, allocator := context.allocator) -> ^Box {
@@ -104,7 +110,7 @@ box :: proc(label: string, w, h : f32, direction: Direction = .Row, size_mode: S
     }
 
     b^ = {
-        id          = make_id(label),
+        id          = make_id(label, parent),
         debug_label = label,
         parent      = parent,
         direction   = direction,
