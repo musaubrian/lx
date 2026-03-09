@@ -37,7 +37,8 @@ icon_button :: proc(parent: ^Box, icon_name: string, w, h : f32, size: i32 = 15,
     }
 
     base := box("icon", w, h, parent = parent, size_mode = .Mixed, style = button_style_with_defaults)
-    icon_text := icon(icon_name, size = f32(size))
+    icon_color := style.icon_color if style.icon_color != {} else _Text_Color
+    icon_text := icon(icon_name, size = f32(size), color = icon_color)
     add_elements(base, icon_text)
     add_elements(parent, base)
 
