@@ -10,10 +10,10 @@ Button_Style :: struct {
     icon_color : Color,
 }
 
-button :: proc(parent: ^Box, label: string, w, h: f32, ctx: ^Context, size_mode: Size_Mode = .Relative, style : Button_Style = {}) -> bool {
+button :: proc(parent: ^Box, label: string, w, h: f32, ctx: ^Context, size_mode: Size_Mode = .Relative, justify : Alignment = .Center, style : Button_Style = {}) -> bool {
     button_style_with_defaults := Style{
         align    = .Center,
-        justify  = .Center,
+        justify  = justify,
         bg       = style.bg,
         hover_bg = { style.bg.r, style.bg.g, style.bg.b, style.bg.a / 2 },
         round    = style.round if style.round > 0 else 5,
